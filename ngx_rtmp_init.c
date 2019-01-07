@@ -215,7 +215,7 @@ ngx_rtmp_init_session(ngx_connection_t *c, ngx_rtmp_addr_conf_t *addr_conf)
         return NULL;
     }
 
-    if (s->srv_conf->tcp_nodelay)
+    if (cscf->tcp_nodelay)
     {
         tcp_nodelay = 1;
 
