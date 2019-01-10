@@ -330,7 +330,10 @@ typedef struct ngx_rtmp_core_srv_conf_s {
     size_t                  out_cork;
     ngx_msec_t              buflen;
 
+    // yyq add <<<<
     ngx_flag_t              tcp_nodelay;
+    ngx_flag_t              tcp_nopush;
+    // >>>> yyq add
 
     ngx_rtmp_conf_ctx_t    *ctx;
 } ngx_rtmp_core_srv_conf_t;

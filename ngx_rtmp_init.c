@@ -148,7 +148,10 @@ ngx_rtmp_init_session(ngx_connection_t *c, ngx_rtmp_addr_conf_t *addr_conf)
     ngx_rtmp_session_t             *s;
     ngx_rtmp_core_srv_conf_t       *cscf;
     ngx_rtmp_error_log_ctx_t       *ctx;
+
+    // yyq add <<<<
     int                            tcp_nodelay;
+    // >>>> yyq add
 
     s = ngx_pcalloc(c->pool, sizeof(ngx_rtmp_session_t) +
             sizeof(ngx_chain_t *) * ((ngx_rtmp_core_srv_conf_t *)
@@ -215,7 +218,16 @@ ngx_rtmp_init_session(ngx_connection_t *c, ngx_rtmp_addr_conf_t *addr_conf)
         return NULL;
     }
 
-    if (s->srv_conf->tcp_nodelay)
+    // yyq add <<<<
+    if (cscf->tcp_nopush)
+    {
+        if (ngx_tcp_nopush(c->fd) == -1)
+        {
+            ngx_connection_error(c, ngx_socket_errno,
+                                 "setsockopt(tcp_nopush) failed");
+        }
+    }
+    else if (cscf->tcp_nodelay)
     {
         tcp_nodelay = 1;
 
@@ -226,6 +238,7 @@ ngx_rtmp_init_session(ngx_connection_t *c, ngx_rtmp_addr_conf_t *addr_conf)
                                  "setsockopt(TCP_NODELAY) failed");
         }
     }
+    // >>>> yyq add
 
     return s;
 }
