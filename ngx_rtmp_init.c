@@ -218,6 +218,7 @@ ngx_rtmp_init_session(ngx_connection_t *c, ngx_rtmp_addr_conf_t *addr_conf)
         return NULL;
     }
 
+<<<<<<< HEAD
     // yyq add <<<<
     if (cscf->tcp_nopush)
     {
@@ -228,6 +229,9 @@ ngx_rtmp_init_session(ngx_connection_t *c, ngx_rtmp_addr_conf_t *addr_conf)
         }
     }
     else if (cscf->tcp_nodelay)
+=======
+    if (cscf->tcp_nodelay)
+>>>>>>> f7b07b7916160d517926792d1bde1805cd81f8f5
     {
         tcp_nodelay = 1;
 
