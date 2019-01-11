@@ -508,6 +508,11 @@ ngx_rtmp_send(ngx_event_t *wev)
     ngx_int_t                   n;
     ngx_rtmp_core_srv_conf_t   *cscf;
 
+    // yyq add for get time <<<<
+    struct timeval   tv_begin, tv_end;
+    ngx_gettimeofday(&tv_begin);
+    // >>>> yyq add for get time
+
     c = wev->data;
     s = c->data;
 
@@ -523,6 +528,7 @@ ngx_rtmp_send(ngx_event_t *wev)
         return;
     }
 
+
     if (wev->timer_set) {
         ngx_del_timer(wev);
     }
@@ -537,9 +543,10 @@ ngx_rtmp_send(ngx_event_t *wev)
 
         if (n == NGX_AGAIN || n == 0) {
             // yyq add for get time <<<<
+            ngx_gettimeofday(&tv_end);
             ngx_log_error(NGX_LOG_ERR, s->connection->log, 0,
-                        "ngx_rtmp_send len = %d, send return n = %d, s->timeout = %d", 
-                        s->out_chain->buf->last - s->out_bpos, n, s->timeout);   
+                        "%d us. ngx_rtmp_send len = %d, send return n = %d, s->timeout = %d", 
+                        tv_end.tv_usec, s->out_chain->buf->last - s->out_bpos, n, s->timeout);   
             // >>>> yyq add for get time
 
             ngx_add_timer(c->write, s->timeout);
@@ -579,6 +586,14 @@ ngx_rtmp_send(ngx_event_t *wev)
     }
 
     ngx_event_process_posted((ngx_cycle_t *) ngx_cycle, &s->posted_dry_events);
+
+
+    // yyq add for get time <<<<
+    ngx_gettimeofday(&tv_end);
+    ngx_log_error(NGX_LOG_ERR, s->connection->log, 0,
+                          "ngx_rtmp_send FIN. begin at %d us, end = %d us, send return n = %d",
+                          tv_begin.tv_usec, tv_end.tv_usec, n);   
+    // >>>> yyq add for get time
 }
 
 
