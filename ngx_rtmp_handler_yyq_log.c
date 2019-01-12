@@ -509,8 +509,10 @@ ngx_rtmp_send(ngx_event_t *wev)
     ngx_rtmp_core_srv_conf_t   *cscf;
 
     // yyq add for get time <<<<
+    int n_total;
     struct timeval   tv_begin, tv_end;
     ngx_gettimeofday(&tv_begin);
+    n_total = 0;
     // >>>> yyq add for get time
 
     c = wev->data;
@@ -561,6 +563,10 @@ ngx_rtmp_send(ngx_event_t *wev)
             return;
         }
 
+        // yyq add for get time <<<<
+	n_total += n;
+        // >>>> yyq add for get time
+
         s->out_bytes += n;
         s->ping_reset = 1;
         ngx_rtmp_update_bandwidth(&ngx_rtmp_bw_out, n);
@@ -591,8 +597,8 @@ ngx_rtmp_send(ngx_event_t *wev)
     // yyq add for get time <<<<
     ngx_gettimeofday(&tv_end);
     ngx_log_error(NGX_LOG_ERR, s->connection->log, 0,
-                          "ngx_rtmp_send FIN. begin at %d us, end = %d us, send return n = %d",
-                          tv_begin.tv_usec, tv_end.tv_usec, n);   
+                          "ngx_rtmp_send FIN. begin at %d us, end = %d us, send return n_total = %d",
+                          tv_begin.tv_usec, tv_end.tv_usec, n_total);   
     // >>>> yyq add for get time
 }
 
